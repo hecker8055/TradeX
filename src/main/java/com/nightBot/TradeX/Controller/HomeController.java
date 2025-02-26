@@ -13,4 +13,9 @@ public class HomeController {
 
         return "Welcome to home page";
     }
+    @GetMapping("/api")
+    public String secure(){
+
+        return "Welcome to secure page";
+    }
 }
