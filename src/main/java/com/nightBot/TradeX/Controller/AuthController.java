@@ -7,6 +7,7 @@ import com.nightBot.TradeX.Repository.UserRepository;
 
 import com.nightBot.TradeX.Response.AuthResponse;
 import com.nightBot.TradeX.Service.CustomUserDetailService;
+import com.nightBot.TradeX.Service.EmailService;
 import com.nightBot.TradeX.Service.TwoFactorOtpService;
 import com.nightBot.TradeX.Utils.OtpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,10 @@ public class AuthController {
     @Autowired
     private TwoFactorOtpService twoFactorOtpService;
 
+
+    @Autowired
+    private EmailService emailService;
+
     @PostMapping("/signUp")
     public ResponseEntity<AuthResponse> register(@RequestBody User user) throws Exception {
 
@@ -63,15 +68,7 @@ public class AuthController {
 
         String jwt = JwtProvider.generateToken(auth);
 
-        if(user.getTwoFactorAuth().isEnabled()){
-            AuthResponse res = new AuthResponse();
-            res.setMessage("Two factor auth is enabled");
-            res.setTwoFactorAuthEnable(true);
-            String otp = OtpUtils.generateOTP();
 
-            TwoFactorOTP oldTwoFactorOTP = twoFactorOtpService.findByUser(user.getId());
-
-        }
 
         AuthResponse res = new AuthResponse();
         res.setJwt(jwt);
@@ -92,6 +89,27 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         String jwt = JwtProvider.generateToken(auth);
+
+        User authUser = userRepository.findByEmail(userName);
+
+        if(user.getTwoFactorAuth().isEnabled()){
+            AuthResponse res = new AuthResponse();
+            res.setMessage("Two factor auth is enabled");
+            res.setTwoFactorAuthEnable(true);
+            String otp = OtpUtils.generateOTP();
+
+            TwoFactorOTP oldTwoFactorOTP = twoFactorOtpService.findByUser(authUser.getId());
+            if(oldTwoFactorOTP != null){
+                twoFactorOtpService.deleteTwoFactorOtp(oldTwoFactorOTP);
+            }
+
+            TwoFactorOTP newTwoFactorOtp = twoFactorOtpService.createTwoFactorOtp(authUser,otp,jwt);
+
+            emailService.sendVerificationOtpEmail(userName,otp);
+
+            res.setSession(newTwoFactorOtp.getId());
+            return  new ResponseEntity<>(res,HttpStatus.ACCEPTED);
+        }
 
         AuthResponse res = new AuthResponse();
         res.setJwt(jwt);
