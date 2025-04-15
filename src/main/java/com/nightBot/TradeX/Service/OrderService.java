@@ -14,10 +14,11 @@ public interface  OrderService {
 
     Order getOrderById(Long orderId) throws Exception;
 
-    List<Order> getAllOrdersOfUser(Long userId , Order orderType,String assetSymbol);
 
-    Order  processOrder(Coin coin, double  quantity ,OrderType orderType,User user);
 
+    List<Order> getAllOrdersOfUser(Long userId, OrderType orderType, String assetSymbol);
+
+    Order  processOrder(Coin coin, double  quantity , OrderType orderType, User user) throws Exception;
 
 
 

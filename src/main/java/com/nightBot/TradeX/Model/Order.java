@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-
 public class Order {
 
 

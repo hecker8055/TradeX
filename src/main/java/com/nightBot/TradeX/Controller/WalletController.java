@@ -5,6 +5,7 @@ import com.nightBot.TradeX.Model.Order;
 import com.nightBot.TradeX.Model.User;
 import com.nightBot.TradeX.Model.Wallet;
 import com.nightBot.TradeX.Model.WalletTransaction;
+import com.nightBot.TradeX.Service.OrderService;
 import com.nightBot.TradeX.Service.UserService;
 import com.nightBot.TradeX.Service.WalletService;
 import com.nightBot.TradeX.Service.WalletServiceImpl;
@@ -23,6 +24,9 @@ public class WalletController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private OrderService orderService;
 
 
     @GetMapping("/api/wallet")
