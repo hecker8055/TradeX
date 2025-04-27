@@ -1,15 +1,36 @@
 package com.nightBot.TradeX.Service;
 
 import com.nightBot.TradeX.Domain.PaymentMethod;
+import com.nightBot.TradeX.Domain.PaymentOrderStatus;
 import com.nightBot.TradeX.Model.PaymentOrder;
 import com.nightBot.TradeX.Model.User;
 import com.nightBot.TradeX.Repository.PaymentOrderRepository;
 import com.nightBot.TradeX.Response.PaymentResponse;
-import lombok.Value;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import com.razorpay.Payment;
+import com.razorpay.PaymentLink;
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.checkout.Session;
+import com.stripe.param.checkout.SessionCreateParams;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+
+@Service
 public class PaymentServiceImpl implements  PaymentService {
-    @Value("${")
+
+
+    @Autowired
+    private PaymentOrderRepository paymentOrderRepository;
+
+    @Value("${stripe.api.key}")
     private String stripeSecretKey;
 
     @Value("${razorpay.api.key}")
@@ -18,17 +39,13 @@ public class PaymentServiceImpl implements  PaymentService {
     @Value("${razorpay.api.secret}")
     private String apiSecret;
 
-    @Autowired
-    private PaymentOrderRepository paymentOrderRepository;
-
-
     @Override
     public PaymentOrder createOrder(User user, Long amount, PaymentMethod paymentMethod) {
-        PaymentOrder order=new PaymentOrder();
-        order.setUser(user);
-        order.setAmount(amount);
-        order.setPaymentMethod(paymentMethod);
-        return paymentOrderRepository.save(order);
+        PaymentOrder paymentOrder = new PaymentOrder();
+        paymentOrder.setUser(user);
+        paymentOrder.setAmount(amount);
+        paymentOrder.setPaymentMethod(paymentMethod);
+        return null;
     }
 
     @Override
@@ -41,7 +58,7 @@ public class PaymentServiceImpl implements  PaymentService {
     }
 
     @Override
-    public Boolean ProccedPaymentOrder(PaymentOrder paymentOrder,String paymentId) throws RazorpayException {
+    public Boolean ProccedPaymentOrder(PaymentOrder paymentOrder, String paymentId) throws RazorpayException {
         if(paymentOrder.getStatus().equals(PaymentOrderStatus.PENDING)){
 
             if(paymentOrder.getPaymentMethod().equals(PaymentMethod.RAZORPAY)){
@@ -69,12 +86,8 @@ public class PaymentServiceImpl implements  PaymentService {
     }
 
     @Override
-    public PaymentResponse createRazorpayPaymentLink(User user,
-                                                     Long Amount,
-                                                     Long orderId)
-            throws RazorpayException {
-
-        Long amount = Amount * 100;
+    public PaymentResponse createRazorpayPaymentLink(User user, Long amount, Long orderId) throws RazorpayException {
+        Long Amount = amount * 100;
 
 
         try {
@@ -125,7 +138,7 @@ public class PaymentServiceImpl implements  PaymentService {
     }
 
     @Override
-    public PaymentResponse createStripePaymentLink(User user, Long amount,Long orderId) throws StripeException {
+    public PaymentResponse createStripePaymentLink(User user, Long amount, Long orderId) throws StripeException {
         Stripe.apiKey = stripeSecretKey;
 
         SessionCreateParams params = SessionCreateParams.builder()

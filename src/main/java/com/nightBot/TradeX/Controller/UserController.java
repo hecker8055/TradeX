@@ -38,7 +38,7 @@ public class UserController {
     private EmailService emailService;
     private String jwt;
 
-    @GetMapping("/api/users")
+    @GetMapping("/api/users/profile")
     public ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserProfileByJwt(jwt);
         return new ResponseEntity<User>(user , HttpStatus.OK);

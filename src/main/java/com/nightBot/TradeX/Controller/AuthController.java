@@ -9,6 +9,7 @@ import com.nightBot.TradeX.Response.AuthResponse;
 import com.nightBot.TradeX.Service.CustomUserDetailService;
 import com.nightBot.TradeX.Service.EmailService;
 import com.nightBot.TradeX.Service.TwoFactorOtpService;
+import com.nightBot.TradeX.Service.WatchlistService;
 import com.nightBot.TradeX.Utils.OtpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,9 @@ public class AuthController {
     @Autowired
     private TwoFactorOtpService twoFactorOtpService;
 
+    @Autowired
+    private WatchlistService watchlistService;
+
 
     @Autowired
     private EmailService emailService;
@@ -55,6 +59,8 @@ public class AuthController {
 
 
         User savedUser = userRepository.save(newUser);
+
+        watchlistService.createWatchList(savedUser);
 
         Authentication auth= new UsernamePasswordAuthenticationToken(
                 user.getEmail(),

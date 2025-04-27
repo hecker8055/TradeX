@@ -1,6 +1,7 @@
 package com.nightBot.TradeX.Model;
 
 
+import com.nightBot.TradeX.Domain.PaymentMethod;
 import com.nightBot.TradeX.Domain.PaymentOrderStatus;
 import jakarta.persistence.*;
 import lombok.Data;

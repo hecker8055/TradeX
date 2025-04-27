@@ -1,14 +1,9 @@
 package com.nightBot.TradeX.Controller;
 
 
-import com.nightBot.TradeX.Model.Order;
-import com.nightBot.TradeX.Model.User;
-import com.nightBot.TradeX.Model.Wallet;
-import com.nightBot.TradeX.Model.WalletTransaction;
-import com.nightBot.TradeX.Service.OrderService;
-import com.nightBot.TradeX.Service.UserService;
-import com.nightBot.TradeX.Service.WalletService;
-import com.nightBot.TradeX.Service.WalletServiceImpl;
+import com.nightBot.TradeX.Model.*;
+import com.nightBot.TradeX.Response.PaymentResponse;
+import com.nightBot.TradeX.Service.*;
 import org.hibernate.type.OrderedSetType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/wallet")
+
 public class WalletController {
 
     @Autowired
@@ -27,6 +22,10 @@ public class WalletController {
 
     @Autowired
     private OrderService orderService;
+
+
+    @Autowired
+    private PaymentService paymentService;
 
 
     @GetMapping("/api/wallet")
@@ -67,5 +66,29 @@ public class WalletController {
 
 
         return new ResponseEntity<>(wallet,HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/api/wallet/deposit")
+    public ResponseEntity<Wallet> addMoneyToWallet(
+            @RequestHeader("Authorization")String jwt,
+            @RequestParam(name="order_id") Long orderId,
+            @RequestParam(name="payment_id")String paymentId
+    ) throws Exception {
+        User user =userService.findUserProfileByJwt(jwt);
+        Wallet wallet = walletService.getUserWallet(user);
+
+
+        PaymentOrder order = paymentService.getPaymentOrderById(orderId);
+        Boolean status=paymentService.ProccedPaymentOrder(order,paymentId);
+        PaymentResponse res = new PaymentResponse();
+        res.setPayment_url("deposit success");
+
+        if(status){
+            wallet=walletService.addBalance(wallet, order.getAmount());
+        }
+
+
+        return new ResponseEntity<>(wallet,HttpStatus.OK);
+
     }
 }

@@ -6,10 +6,13 @@ import com.nightBot.TradeX.Model.User;
 import com.nightBot.TradeX.Model.Wallet;
 import com.nightBot.TradeX.Repository.WalletRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
+
+@Service
 public class WalletServiceImpl implements  WalletService{
 
 
