@@ -2,7 +2,7 @@
 # **TradeX - CryptoTradingPlatform**
 
 
-I developed a full-stack cryptocurrency trading platform that empowers users to buy, sell, and trade digital assets like Bitcoin and Ethereum seamlessly. The platform leverages real-time market data, integrating the CoinGecko API to provide live price updates, market trends, and actionable insights for informed trading decisions.
+A full-stack cryptocurrency trading platform that empowers users to buy, sell, and trade digital assets like Bitcoin and Ethereum seamlessly. The platform leverages real-time market data, integrating the CoinGecko API to provide live price updates, market trends, and actionable insights for informed trading decisions.
 
 For secure and efficient transactions, I integrated Razorpay and Stripe payment gateways, ensuring users can deposit and withdraw funds with confidence. User security is further reinforced with JWT-based authentication, allowing safe account management and access control.
 
@@ -11,6 +11,7 @@ To enhance user experience, I incorporated the Gemini API to build an intelligen
 The backend is powered by Spring Boot, providing robust, scalable, and high-performance services, while the frontend is built with React.js, delivering a smooth, responsive interface for executing trades, managing portfolios, and monitoring transactions in real-time.
 
 This platform combines cutting-edge blockchain integration, secure payment processing, and AI-driven assistance to offer a comprehensive and user-friendly cryptocurrency trading experience.
+
 # *Technology*
 
 - SpringBoot
