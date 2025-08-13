@@ -21,7 +21,7 @@ This platform combines cutting-edge blockchain integration, secure payment proce
 
 # *Features*
 
-- `AI chatbot`
+
 - `RazorPay`
 - `Stripe`
 - `Real time data ( Coingecko API )`
@@ -39,6 +39,7 @@ This platform combines cutting-edge blockchain integration, secure payment proce
 - `Otp service`
 - `real time graph`
 - `Buy and sell`
+- - `AI chatbot`
 
 # *Screenshots*
 
